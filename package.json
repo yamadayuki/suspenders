@@ -29,6 +29,7 @@
   },
   "files": [
     "lib",
+    "belt-native.opam",
     "!**/.merlin"
   ],
   "publishConfig": {
