@@ -30,5 +30,8 @@
   "files": [
     "lib",
     "!**/.merlin"
-  ]
+  ],
+  "publishConfig": {
+    "access": "public"
+  }
 }
