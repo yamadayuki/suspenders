@@ -1,6 +1,6 @@
 {
   "name": "@yamadayuki/belt-native",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "BuckleScript's Belt interface port to native",
   "license": "MIT",
   "esy": {
