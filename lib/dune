@@ -1,0 +1,5 @@
+(library
+  (name BeltNative)
+  (flags (-w -40 -w +26))
+  (public_name belt-native.lib)
+  (modules BeltNative))

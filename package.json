@@ -1,0 +1,34 @@
+{
+  "name": "@yamadayuki/belt-native",
+  "version": "0.0.0",
+  "description": "BuckleScript's Belt interface port to native",
+  "license": "MIT",
+  "esy": {
+    "build": "dune build -p belt-native",
+    "release": {
+      "bin": "BeltNativeTest"
+    }
+  },
+  "scripts": {
+    "test": "esy x BeltNativeTest",
+    "doc": "esy dune build @doc"
+  },
+  "dependencies": {
+    "@opam/dune": "*",
+    "@esy-ocaml/reason": "*",
+    "ocaml": "~4.6.0",
+    "refmterr": "*"
+  },
+  "devDependencies": {
+    "@opam/merlin": "*",
+    "@opam/odoc": "*",
+    "@reason-native/console": "*",
+    "@reason-native/pastel": "*",
+    "@reason-native/rely": "*",
+    "ocaml": "~4.6.0"
+  },
+  "files": [
+    "lib",
+    "!**/.merlin"
+  ]
+}

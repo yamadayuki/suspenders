@@ -1,0 +1,5 @@
+(executable
+  (package belt-native)
+  (name BeltNativeTest)
+  (public_name BeltNativeTest)
+  (libraries belt-native.lib rely.lib))

@@ -1,0 +1,3 @@
+include SampleTest;
+
+TestFramework.cli();
