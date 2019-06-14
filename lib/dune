@@ -1,4 +1,9 @@
 (library
   (name Suspenders)
   (flags (-w -40 -w +26))
-  (public_name suspenders.lib))
+  (public_name suspenders.lib)
+  (modules
+    Suspenders
+    SuspendersArray
+    SuspendersList
+    SuspendersOption))

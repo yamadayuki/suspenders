@@ -1,8 +1,7 @@
 open TestFramework;
+open Suspenders.Array;
 
-open Suspenders.BArray;
-
-describe("BArray", ({describe, test}) => {
+describe("Array", ({describe, test}) => {
   describe("swapExn", ({test}) => {
     test("doesn't throw", ({expect}) => {
       let arr = [|1, 2, 3|];

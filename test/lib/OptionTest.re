@@ -1,8 +1,8 @@
 open TestFramework;
 
-open Suspenders.BOption;
+open Suspenders.Option;
 
-describe("BOption", ({describe, test}) => {
+describe("Option", ({describe, test}) => {
   let add1 = x => x + 1;
 
   describe("mapWithDefault", ({test}) => {
