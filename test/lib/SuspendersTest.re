@@ -1,4 +1,4 @@
-include BArrayTest;
-include BOptionTest;
+include ArrayTest;
+include OptionTest;
 
 TestFramework.cli();
