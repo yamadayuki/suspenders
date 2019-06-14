@@ -1,16 +1,16 @@
 {
-  "name": "@yamadayuki/belt-native",
+  "name": "@yamadayuki/suspenders",
   "version": "0.0.1",
-  "description": "BuckleScript's Belt interface port to native",
+  "description": "Utility for built-in modules inspired by BuckleScript Belt",
   "license": "MIT",
   "esy": {
-    "build": "dune build -p belt-native",
+    "build": "refmterr dune build -p suspenders",
     "release": {
-      "bin": "BeltNativeTest"
+      "bin": "SuspendersTest"
     }
   },
   "scripts": {
-    "test": "esy x BeltNativeTest",
+    "test": "esy x SuspendersTest",
     "doc": "esy dune build @doc"
   },
   "dependencies": {
@@ -29,7 +29,7 @@
   },
   "files": [
     "lib",
-    "belt-native.opam",
+    "suspenders.opam",
     "!**/.merlin"
   ],
   "publishConfig": {

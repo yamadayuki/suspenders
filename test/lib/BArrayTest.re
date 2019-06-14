@@ -1,6 +1,6 @@
 open TestFramework;
 
-open BeltNative.BArray;
+open Suspenders.BArray;
 
 describe("BArray", ({describe, test}) => {
   describe("swapExn", ({test}) => {

@@ -1,6 +1,6 @@
 open TestFramework;
 
-open BeltNative.BOption;
+open Suspenders.BOption;
 
 describe("BOption", ({describe, test}) => {
   let add1 = x => x + 1;

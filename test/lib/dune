@@ -1,5 +1,5 @@
 (executable
-  (package belt-native)
-  (name BeltNativeTest)
-  (public_name BeltNativeTest)
-  (libraries belt-native.lib rely.lib))
+  (package suspenders)
+  (name SuspendersTest)
+  (public_name SuspendersTest)
+  (libraries suspenders.lib rely.lib))
