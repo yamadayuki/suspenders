@@ -1,8 +1,8 @@
-let mapWithDefault: (option('a), 'b, 'a => 'b) => 'b;
-let map: (option('a), 'a => 'b) => option('b);
-let flatMap: (option('a), 'a => option('b)) => option('b);
-let getWithDefault: (option('a), 'a) => 'a;
+let mapWithDefault: ('b, 'a => 'b, option('a)) => 'b;
+let map: ('a => 'b, option('a)) => option('b);
+let flatMap: ('a => option('b), option('a)) => option('b);
+let getWithDefault: ('a, option('a)) => 'a;
 let isSome: option('a) => bool;
 let isNone: option('a) => bool;
-let eq: (option('a), option('b), ('a, 'b) => bool) => bool;
-let cmp: (option('a), option('b), ('a, 'b) => int) => int;
+let eq: (('a, 'b) => bool, option('a), option('b)) => bool;
+let cmp: (('a, 'b) => int, option('a), option('b)) => int;

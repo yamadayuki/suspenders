@@ -90,7 +90,7 @@ let zip = (xs, ys) => {
   result;
 };
 
-let zipBy = (xs, ys, f) => {
+let zipBy = (f, xs, ys) => {
   let (lenx, leny) = (length(xs), length(ys));
   let len = min(lenx, leny);
   let result = make(len, f(getExn(xs, 0), getExn(ys, 0)));
@@ -118,7 +118,7 @@ let concatMany = arrs => {
   result;
 };
 
-let slice = (xs, offset, len) =>
+let slice = (offset, len, xs) =>
   if (len <= 0) {
     [||];
   } else {
@@ -142,7 +142,7 @@ let slice = (xs, offset, len) =>
     };
   };
 
-let sliceToEnd = (xs, offset) => {
+let sliceToEnd = (offset, xs) => {
   let lenxs = length(xs);
   let ofs =
     if (offset < 0) {
@@ -158,7 +158,7 @@ let sliceToEnd = (xs, offset) => {
   result;
 };
 
-let fill = (xs, offset, len, v) =>
+let fill = (offset, len, v, xs) =>
   if (len > 0) {
     let len = length(xs);
     let ofs = offset < 0 ? max(len + offset, 0) : offset;
@@ -170,17 +170,17 @@ let fill = (xs, offset, len, v) =>
     };
   };
 
-let forEach = (xs, f) =>
+let forEach = (f, xs) =>
   for (i in 0 to length(xs) - 1) {
     f(getExn(xs, i));
   };
 
-let forEachi = (xs, f) =>
+let forEachi = (f, xs) =>
   for (i in 0 to length(xs) - 1) {
     f(i, getExn(xs, i));
   };
 
-let getBy = (xs, f) => {
+let getBy = (f, xs) => {
   let l = length(xs);
   let i = ref(0);
   let r = ref(None);
@@ -196,7 +196,7 @@ let getBy = (xs, f) => {
   r^;
 };
 
-let getIndexBy = (xs, f) => {
+let getIndexBy = (f, xs) => {
   let l = length(xs);
   let i = ref(0);
   let r = ref(None);
@@ -212,7 +212,7 @@ let getIndexBy = (xs, f) => {
   r^;
 };
 
-let keep = (xs, f) => {
+let keep = (f, xs) => {
   let l = length(xs);
   let result = make(l, getExn(xs, 0));
   let j = ref(0);
@@ -223,10 +223,10 @@ let keep = (xs, f) => {
       incr(j);
     };
   };
-  slice(result, 0, j^);
+  slice(0, j^, result);
 };
 
-let keepi = (xs, f) => {
+let keepi = (f, xs) => {
   let l = length(xs);
   let result = make(l, getExn(xs, 0));
   let j = ref(0);
@@ -237,10 +237,10 @@ let keepi = (xs, f) => {
       incr(j);
     };
   };
-  slice(result, 0, j^);
+  slice(0, j^, result);
 };
 
-let keepMap = (xs, f) => {
+let keepMap = (f, xs) => {
   let l = length(xs);
   let result = make(l, getExn(xs, 0));
   let j = ref(0);
@@ -253,10 +253,10 @@ let keepMap = (xs, f) => {
       incr(j);
     };
   };
-  slice(result, 0, j^);
+  slice(0, j^, result);
 };
 
-let reduce = (xs, acc, f) => {
+let reduce = (f, acc, xs) => {
   let result = ref(acc);
   for (i in 0 to length(xs) - 1) {
     result := f(result^, getExn(xs, i));
@@ -264,7 +264,7 @@ let reduce = (xs, acc, f) => {
   result^;
 };
 
-let reduceReverse = (xs, acc, f) => {
+let reduceReverse = (f, acc, xs) => {
   let result = ref(acc);
   for (i in length(xs) - 1 downto 0) {
     result := f(result^, getExn(xs, i));
@@ -272,7 +272,7 @@ let reduceReverse = (xs, acc, f) => {
   result^;
 };
 
-let reducei = (xs, acc, f) => {
+let reducei = (f, acc, xs) => {
   let result = ref(acc);
   for (i in 0 to length(xs) - 1) {
     result := f(i, result^, getExn(xs, i));
@@ -289,7 +289,7 @@ let rec everyAux = (xs, i, f, len) =>
     false;
   };
 
-let every = (xs, f) => {
+let every = (f, xs) => {
   let len = length(xs);
   everyAux(xs, 0, f, len);
 };
@@ -303,7 +303,7 @@ let rec someAux = (xs, i, f, len) =>
     someAux(xs, i + 1, f, len);
   };
 
-let some = (xs, f) => {
+let some = (f, xs) => {
   let len = length(xs);
   someAux(xs, 0, f, len);
 };
@@ -317,7 +317,7 @@ let rec eqAux = (xs, ys, i, f, len) =>
     false;
   };
 
-let eq = (xs, ys, f) => {
+let eq = (f, xs, ys) => {
   let lenxs = length(xs);
   let lenys = length(ys);
   if (lenxs == lenys) {
@@ -339,7 +339,7 @@ let rec cmpAux = (xs, ys, i, f, len) =>
     };
   };
 
-let cmp = (xs, ys, f) => {
+let cmp = (f, xs, ys) => {
   let lenxs = length(xs);
   let lenys = length(ys);
   if (lenxs > lenys) {
@@ -351,14 +351,14 @@ let cmp = (xs, ys, f) => {
   };
 };
 
-let partition = (a, f) => {
-  let l = length(a);
+let partition = (f, xs) => {
+  let l = length(xs);
   let i = ref(0);
   let j = ref(0);
-  let a1 = make(l, getExn(a, 0));
-  let a2 = make(l, getExn(a, 0));
+  let a1 = make(l, getExn(xs, 0));
+  let a2 = make(l, getExn(xs, 0));
   for (ii in 0 to l - 1) {
-    let v = getExn(a, ii);
+    let v = getExn(xs, ii);
     if (f(. v)) {
       setExn(a1, i^, v);
       incr(i);
@@ -367,7 +367,7 @@ let partition = (a, f) => {
       incr(j);
     };
   };
-  (slice(a1, 0, i^), slice(a2, 0, j^));
+  (slice(0, i^, a1), slice(0, j^, a2));
 };
 
 let unzip = arr => {

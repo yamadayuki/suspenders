@@ -40,10 +40,20 @@ describe("List", ({describe, test}) => {
     });
   });
 
+  test("fromArray", ({expect}) => {
+    expect.fn(() => fromArray([|1, 2, 3|])).not.toThrow();
+    expect.list(fromArray([|1, 2, 3|])).toEqual([1, 2, 3]);
+  });
+
+  test("toArray", ({expect}) => {
+    expect.fn(() => toArray([1, 2, 3])).not.toThrow();
+    expect.array(toArray([1, 2, 3])).toEqual([|1, 2, 3|]);
+  });
+
   test("add", ({expect}) => {
     let list = [1, 2, 3];
-    expect.fn(() => add(list, 0)).not.toThrow();
-    expect.list(add(list, 0)).toEqual([0, 1, 2, 3]);
+    expect.fn(() => add(0, list)).not.toThrow();
+    expect.list(add(0, list)).toEqual([0, 1, 2, 3]);
   });
 
   test("get", ({expect}) => {
@@ -68,8 +78,8 @@ describe("List", ({describe, test}) => {
 
   test("partition", ({expect}) => {
     let list = [1, 2, 3];
-    expect.fn(() => partition(list, x => true)).not.toThrow();
-    expect.equal(partition(list, x => x mod 2 == 1), ([1, 3], [2]));
+    expect.fn(() => partition(x => true, list)).not.toThrow();
+    expect.equal(partition(x => x mod 2 == 1, list), ([1, 3], [2]));
   });
 
   test("unzip", ({expect}) => {
@@ -87,27 +97,27 @@ describe("List", ({describe, test}) => {
 
   test("take", ({expect}) => {
     let list = [1, 2, 3];
-    expect.fn(() => take(list, 2)).not.toThrow();
-    expect.option(take(list, 2)).toBe(Some([1, 2]));
+    expect.fn(() => take(2, list)).not.toThrow();
+    expect.option(take(2, list)).toBe(Some([1, 2]));
   });
 
   test("drop", ({expect}) => {
     let list = [1, 2, 3];
-    expect.fn(() => drop(list, 2)).not.toThrow();
-    expect.option(drop(list, 2)).toBe(Some([3]));
+    expect.fn(() => drop(2, list)).not.toThrow();
+    expect.option(drop(2, list)).toBe(Some([3]));
   });
 
   test("splitAt", ({expect}) => {
     let list = [1, 2, 3];
-    expect.fn(() => splitAt(list, 2)).not.toThrow();
-    expect.option(splitAt(list, 2)).toBe(Some(([1, 2], [3])));
+    expect.fn(() => splitAt(2, list)).not.toThrow();
+    expect.option(splitAt(2, list)).toBe(Some(([1, 2], [3])));
   });
 
   test("zipBy", ({expect}) => {
     let xs = [1, 2, 3];
     let ys = [4, 5, 6, 7];
-    expect.fn(() => zipBy(xs, ys, (x, y) => x + y)).not.toThrow();
-    expect.list(zipBy(xs, ys, (x, y) => x + y)).toEqual([5, 7, 9]);
+    expect.fn(() => zipBy((x, y) => x + y, xs, ys)).not.toThrow();
+    expect.list(zipBy((x, y) => x + y, xs, ys)).toEqual([5, 7, 9]);
   });
 
   test("makeBy", ({expect}) => {
@@ -118,5 +128,65 @@ describe("List", ({describe, test}) => {
   test("make", ({expect}) => {
     expect.fn(() => make(3, 3)).not.toThrow();
     expect.list(make(3, 3)).toEqual([3, 3, 3]);
+  });
+
+  test("shuffle", ({expect}) => {
+    let list = [1, 2, 3];
+    let newList = ref([]);
+    expect.fn(() => newList := shuffle(list)).not.toThrow();
+    expect.list(list).toEqual([1, 2, 3]);
+    expect.ext.list(newList^).hasMember(1);
+    expect.ext.list(newList^).hasMember(2);
+    expect.ext.list(newList^).hasMember(3);
+  });
+
+  test("reverse", ({expect}) => {
+    let list = [1, 2, 3];
+    let newList = ref([]);
+    expect.fn(() => newList := reverse(list)).not.toThrow();
+    expect.list(list).toEqual([1, 2, 3]);
+    expect.list(newList^).toEqual([3, 2, 1]);
+  });
+
+  test("mapReverse", ({expect}) => {
+    let list = [1, 2, 3];
+    expect.fn(() => mapReverse(x => x * x, list)).not.toThrow();
+    expect.list(mapReverse(x => x * x, list)).toEqual([9, 4, 1]);
+  });
+
+  test("forEach", ({expect}) => {
+    let double = x => ();
+    let mock = Mock.mock1(double);
+    let list = [1, 2, 3];
+
+    expect.fn(() => forEach(Mock.fn(mock), list)).not.toThrow();
+    expect.mock(mock).toBeCalledTimes(3);
+  });
+
+  test("forEachi", ({expect}) => {
+    let double = (i, x) => ();
+    let mock = Mock.mock1(double);
+    let list = [1, 2, 3];
+
+    expect.fn(() => forEachi(Mock.fn(mock), list)).not.toThrow();
+    expect.mock(mock).toBeCalledTimes(3);
+  });
+
+  test("reduce", ({expect}) => {
+    let list = [1, 2, 3];
+    expect.fn(() => reduce((acc, x) => acc + x, 0, list)).not.toThrow();
+    expect.int(reduce((acc, x) => acc + x, 0, list)).toBe(6);
+  });
+
+  test("reduceReverse", ({expect}) => {
+    let list = [1, 2, 3];
+    expect.fn(() => reduceReverse((acc, x) => acc + x, 0, list)).not.toThrow();
+    expect.int(reduceReverse((acc, x) => acc + x, 0, list)).toBe(6);
+  });
+
+  test("reducei", ({expect}) => {
+    let list = [1, 2, 3];
+    expect.fn(() => reducei((i, acc, x) => acc + x, 0, list)).not.toThrow();
+    expect.int(reducei((i, acc, x) => acc + x, 0, list)).toBe(6);
   });
 });

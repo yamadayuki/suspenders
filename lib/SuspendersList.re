@@ -1,5 +1,7 @@
 open List;
 
+module A = Suspenders__SuspendersArray;
+
 let head =
   fun
   | [] => None
@@ -20,7 +22,28 @@ let tailExn =
   | [] => raise @@ invalid_arg("tailExn")
   | [_, ...xs] => xs;
 
-let add = (xs, x) => [x, ...xs];
+let fromArray = A.to_list;
+
+let rec toArrayAux = (xs, i, x) => {
+  switch (x) {
+  | [] => xs
+  | [h, ...t] =>
+    A.setExn(xs, i, h);
+    toArrayAux(xs, i + 1, t);
+  };
+};
+
+let toArray = xs => {
+  let len = length(xs);
+  if (len <= 0) {
+    [||];
+  } else {
+    let arr = A.make(len, headExn(xs));
+    toArrayAux(arr, 0, xs);
+  };
+};
+
+let add = (x, xs) => [x, ...xs];
 
 let rec get = (xs, n) =>
   switch (xs) {
@@ -36,7 +59,7 @@ let rec getExn = (xs, n) =>
   | _ => raise @@ invalid_arg("getExn")
   };
 
-let partition = (xs, f) => {
+let partition = (f, xs) => {
   fold_left(
     ((ys, zs), x) =>
       if (f(x)) {
@@ -78,7 +101,7 @@ let rec takeAux = (n, cell, prec) =>
     };
   };
 
-let take = (xs, n) =>
+let take = (n, xs) =>
   if (n < 0) {
     None;
   } else if (n == 0) {
@@ -92,25 +115,25 @@ let take = (xs, n) =>
     };
   };
 
-let rec drop = (xs, n) =>
+let rec drop = (n, xs) =>
   if (n < 0) {
     None;
   } else if (n == 0) {
     Some(xs);
   } else {
     switch (xs) {
-    | [_, ...t] => drop(t, n - 1)
+    | [_, ...t] => drop(n - 1, t)
     | [] => None
     };
   };
 
-let splitAt = (xs, n) =>
+let splitAt = (n, xs) =>
   if (n < 0) {
     None;
   } else if (n == 0) {
     Some(([], xs));
   } else {
-    switch (take(xs, n), drop(xs, n)) {
+    switch (take(n, xs), drop(n, xs)) {
     | (Some(l), Some(r)) => Some((l, r))
     | (None, Some(r)) => Some(([], r))
     | _ => None
@@ -125,7 +148,7 @@ let rec zipByAux = (f, xs, ys, prec) => {
   };
 };
 
-let zipBy = (xs, ys, f) => {
+let zipBy = (f, xs, ys) => {
   switch (xs, ys) {
   | ([], _)
   | (_, []) => []
@@ -159,3 +182,29 @@ let make = (n, v) =>
     };
     cur^;
   };
+
+let shuffle = xs => {
+  let arr = toArray(xs);
+  A.shuffleInPlace(arr);
+  fromArray(arr);
+};
+
+let reverse = rev;
+
+let rec mapReverseAux = (f, acc, xs) =>
+  switch (xs) {
+  | [] => acc
+  | [h, ...t] => mapReverseAux(f, [f(h), ...acc], t)
+  };
+
+let mapReverse = (f, xs) => mapReverseAux(f, [], xs);
+
+let forEach = iter;
+let forEachi = iteri;
+
+let rec reduce = (f, acc, xs) => xs |> toArray |> A.reduce(f, acc);
+
+let rec reduceReverse = (f, acc, xs) =>
+  xs |> toArray |> A.reduceReverse(f, acc);
+
+let rec reducei = (f, acc, xs) => xs |> toArray |> A.reducei(f, acc);

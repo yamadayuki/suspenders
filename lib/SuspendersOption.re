@@ -1,22 +1,22 @@
-let mapWithDefault = (opt, default, f) =>
+let mapWithDefault = (default, f, opt) =>
   switch (opt) {
   | Some(x) => f(x)
   | None => default
   };
 
-let map = (opt, f) =>
+let map = (f, opt) =>
   switch (opt) {
   | Some(x) => Some(f(x))
   | None => None
   };
 
-let flatMap = (opt, f) =>
+let flatMap = (f, opt) =>
   switch (opt) {
   | Some(x) => f(x)
   | None => None
   };
 
-let getWithDefault = (opt, default) =>
+let getWithDefault = (default, opt) =>
   switch (opt) {
   | Some(x) => x
   | None => default
@@ -29,7 +29,7 @@ let isSome =
 
 let isNone = x => x == None;
 
-let eq = (a, b, f) =>
+let eq = (f, a, b) =>
   switch (a) {
   | Some(a) =>
     switch (b) {
@@ -39,7 +39,7 @@ let eq = (a, b, f) =>
   | None => b == None
   };
 
-let cmp = (a, b, f) =>
+let cmp = (f, a, b) =>
   switch (a, b) {
   | (Some(a), Some(b)) => f(a, b)
   | (None, Some(_)) => (-1)

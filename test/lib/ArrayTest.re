@@ -91,7 +91,7 @@ describe("Array", ({describe, test}) => {
     let x = [|1, 2, 3|];
     let y = [|4, 5, 6|];
     let arr = ref([||]);
-    expect.fn(() => arr := zipBy(x, y, (a, b) => a + b)).not.toThrow();
+    expect.fn(() => arr := zipBy((a, b) => a + b, x, y)).not.toThrow();
     expect.array(arr^).toEqual([|5, 7, 9|]);
   });
 
@@ -107,7 +107,7 @@ describe("Array", ({describe, test}) => {
   test("slice", ({expect}) => {
     let arr = [|1, 2, 3|];
     let newArr = ref([||]);
-    expect.fn(() => newArr := slice(arr, 1, 2)).not.toThrow();
+    expect.fn(() => newArr := slice(1, 2, arr)).not.toThrow();
     expect.array(arr).toEqual([|1, 2, 3|]);
     expect.array(newArr^).toEqual([|2, 3|]);
   });
@@ -115,67 +115,67 @@ describe("Array", ({describe, test}) => {
   test("sliceToEnd", ({expect}) => {
     let arr = [|1, 2, 3|];
     let newArr = ref([||]);
-    expect.fn(() => newArr := sliceToEnd(arr, 1)).not.toThrow();
+    expect.fn(() => newArr := sliceToEnd(1, arr)).not.toThrow();
     expect.array(arr).toEqual([|1, 2, 3|]);
     expect.array(newArr^).toEqual([|2, 3|]);
   });
 
   test("fill", ({expect}) => {
     let arr = [|1, 2, 3|];
-    expect.fn(() => fill(arr, 1, 2, 1)).not.toThrow();
+    expect.fn(() => fill(1, 2, 1, arr)).not.toThrow();
     expect.array(arr).not.toEqual([|1, 2, 3|]);
     expect.array(arr).toEqual([|1, 1, 1|]);
   });
 
   test("forEach", ({expect}) => {
-    let double = x => x * 2;
+    let double = x => x * 2 |> ignore;
     let mock = Mock.mock1(double);
     let arr = [|1, 2, 3|];
 
-    expect.fn(() => forEach(arr, Mock.fn(mock))).not.toThrow();
+    expect.fn(() => forEach(Mock.fn(mock), arr)).not.toThrow();
     expect.mock(mock).toBeCalledTimes(3);
   });
 
   test("forEach", ({expect}) => {
-    let double = (i, x) => (i + x) * 2;
+    let double = (i, x) => (i + x) * 2 |> ignore;
     let mock = Mock.mock1(double);
     let arr = [|1, 2, 3|];
 
-    expect.fn(() => forEachi(arr, Mock.fn(mock))).not.toThrow();
+    expect.fn(() => forEachi(Mock.fn(mock), arr)).not.toThrow();
     expect.mock(mock).toBeCalledTimes(3);
   });
 
   test("getBy", ({expect}) => {
     let arr = [|1, 2, 3|];
-    expect.fn(() => getBy(arr, x => x == 1)).not.toThrow();
-    expect.option(getBy(arr, x => x == 1)).toBe(Some(1));
-    expect.option(getBy(arr, x => x == 5)).toBeNone();
+    expect.fn(() => getBy(x => x == 1, arr)).not.toThrow();
+    expect.option(getBy(x => x == 1, arr)).toBe(Some(1));
+    expect.option(getBy(x => x == 5, arr)).toBeNone();
   });
 
   test("getIndexBy", ({expect}) => {
     let arr = [|1, 2, 3|];
-    expect.fn(() => getIndexBy(arr, x => x == 1)).not.toThrow();
-    expect.option(getIndexBy(arr, x => x == 1)).toBe(Some(0));
-    expect.option(getIndexBy(arr, x => x == 5)).toBeNone();
+    expect.fn(() => getIndexBy(x => x == 1, arr)).not.toThrow();
+    expect.option(getIndexBy(x => x == 1, arr)).toBe(Some(0));
+    expect.option(getIndexBy(x => x == 5, arr)).toBeNone();
   });
 
   test("keep", ({expect}) => {
     let arr = [|1, 2, 3|];
-    expect.fn(() => keep(arr, x => x mod 2 == 1)).not.toThrow();
-    expect.array(keep(arr, x => x mod 2 == 1)).toEqual([|1, 3|]);
+    expect.fn(() => keep(x => x mod 2 == 1, arr)).not.toThrow();
+    expect.array(keep(x => x mod 2 == 1, arr)).toEqual([|1, 3|]);
   });
 
   test("keepi", ({expect}) => {
     let arr = [|1, 2, 3|];
-    expect.fn(() => keepi(arr, (i, x) => x mod 2 == 1)).not.toThrow();
-    expect.array(keepi(arr, (i, x) => x mod 2 == 1)).toEqual([|1, 3|]);
+    expect.fn(() => keepi((i, x) => x mod 2 == 1, arr)).not.toThrow();
+    expect.array(keepi((i, x) => x mod 2 == 1, arr)).toEqual([|1, 3|]);
   });
 
   test("keepMap", ({expect}) => {
     let arr = [|1, 2, 3|];
-    expect.fn(() => keepMap(arr, x => x mod 2 == 1 ? Some(x) : None)).not.
+    expect.fn(() => keepMap(x => x mod 2 == 1 ? Some(x) : None, arr)).not.
       toThrow();
-    expect.array(keepMap(arr, x => x mod 2 == 1 ? Some(x) : None)).toEqual([|
+    expect.array(keepMap(x => x mod 2 == 1 ? Some(x) : None, arr)).toEqual([|
       1,
       3,
     |]);
@@ -183,55 +183,55 @@ describe("Array", ({describe, test}) => {
 
   test("reduce", ({expect}) => {
     let arr = [|1, 2, 3|];
-    expect.fn(() => reduce(arr, 0, (acc, x) => acc + x)).not.toThrow();
-    expect.int(reduce(arr, 0, (acc, x) => acc + x)).toBe(6);
+    expect.fn(() => reduce((acc, x) => acc + x, 0, arr)).not.toThrow();
+    expect.int(reduce((acc, x) => acc + x, 0, arr)).toBe(6);
   });
 
   test("reduceReverse", ({expect}) => {
     let arr = [|1, 2, 3|];
-    expect.fn(() => reduceReverse(arr, 0, (acc, x) => acc + x)).not.toThrow();
-    expect.int(reduceReverse(arr, 0, (acc, x) => acc + x)).toBe(6);
+    expect.fn(() => reduceReverse((acc, x) => acc + x, 0, arr)).not.toThrow();
+    expect.int(reduceReverse((acc, x) => acc + x, 0, arr)).toBe(6);
   });
 
   test("reducei", ({expect}) => {
     let arr = [|1, 2, 3|];
-    expect.fn(() => reducei(arr, 0, (i, acc, x) => acc + x)).not.toThrow();
-    expect.int(reducei(arr, 0, (i, acc, x) => acc + x)).toBe(6);
+    expect.fn(() => reducei((i, acc, x) => acc + x, 0, arr)).not.toThrow();
+    expect.int(reducei((i, acc, x) => acc + x, 0, arr)).toBe(6);
   });
 
   test("every", ({expect}) => {
     let arr = [|1, 2, 3|];
-    expect.fn(() => every(arr, x => x < 5)).not.toThrow();
-    expect.bool(every(arr, x => x < 5)).toBe(true);
-    expect.bool(every(arr, x => x > 2)).toBe(false);
+    expect.fn(() => every(x => x < 5, arr)).not.toThrow();
+    expect.bool(every(x => x < 5, arr)).toBe(true);
+    expect.bool(every(x => x > 2, arr)).toBe(false);
   });
 
   test("some", ({expect}) => {
     let arr = [|1, 2, 3|];
-    expect.fn(() => some(arr, x => x < 5)).not.toThrow();
-    expect.bool(some(arr, x => x < 5)).toBe(true);
-    expect.bool(some(arr, x => x > 5)).toBe(false);
+    expect.fn(() => some(x => x < 5, arr)).not.toThrow();
+    expect.bool(some(x => x < 5, arr)).toBe(true);
+    expect.bool(some(x => x > 5, arr)).toBe(false);
   });
 
   test("eq", ({expect}) => {
     let xs = [|1, 2, 3|];
     let ys = [|1, 2, 3|];
-    expect.fn(() => eq(xs, ys, (x, y) => x == y)).not.toThrow();
-    expect.bool(eq(xs, ys, (x, y) => x == y)).toBe(true);
+    expect.fn(() => eq((==), xs, ys)).not.toThrow();
+    expect.bool(eq((==), xs, ys)).toBe(true);
   });
 
   test("cmp", ({expect}) => {
     let xs = [|1, 2, 3|];
     let ys = [|1, 2, 3|];
-    expect.fn(() => cmp(xs, ys, (x, y) => 1)).not.toThrow();
-    expect.int(cmp(xs, ys, (x, y) => 0)).toBe(0);
-    expect.int(cmp(xs, [|1, 2, 3, 4|], (x, y) => 0)).toBe(-1);
+    expect.fn(() => cmp((x, y) => 1, xs, ys)).not.toThrow();
+    expect.int(cmp((x, y) => 0, xs, ys)).toBe(0);
+    expect.int(cmp((x, y) => 0, xs, [|1, 2, 3, 4|])).toBe(-1);
   });
 
   test("partition", ({expect}) => {
     let arr = [|1, 2, 3|];
-    expect.fn(() => partition(arr, x => true)).not.toThrow();
-    expect.equal(partition(arr, x => x mod 2 == 1), ([|1, 3|], [|2|]));
+    expect.fn(() => partition(x => true, arr)).not.toThrow();
+    expect.equal(partition(x => x mod 2 == 1, arr), ([|1, 3|], [|2|]));
   });
 
   test("unzip", ({expect}) => {
