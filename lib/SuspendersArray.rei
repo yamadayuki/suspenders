@@ -69,3 +69,4 @@ let eq: (('a, 'b) => bool, array('a), array('b)) => bool;
 let cmp: (('a, 'b) => int, array('a), array('b)) => int;
 let partition: ('a => bool, array('a)) => (array('a), array('a));
 let unzip: array(('a, 'b)) => (array('a), array('b));
+let unique: array('a) => array('a);

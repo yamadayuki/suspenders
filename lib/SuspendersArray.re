@@ -390,3 +390,16 @@ let unzip = arr => {
   };
   (xs, ys);
 };
+
+let unique = xs => {
+  let result = ref([||]);
+
+  for (i in 0 to length(xs) - 1) {
+    let item = getExn(xs, i);
+    if (!mem(item, result^)) {
+      result := concat([result^, [|item|]]);
+    };
+  };
+
+  result^;
+};

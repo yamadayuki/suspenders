@@ -246,4 +246,10 @@ describe("Array", ({describe, test}) => {
     expect.fn(() => unzip(arr)).not.toThrow();
     expect.equal(unzip(arr), ([|1, 2, 3|], [|2, 3, 4|]));
   });
+
+  test("unique", ({expect}) => {
+    let arr = [|1, 1, 2, 3, 5, 8, 8|];
+    expect.fn(() => unique(arr)).not.toThrow();
+    expect.array(unique(arr)).toEqual([|1, 2, 3, 5, 8|]);
+  });
 });

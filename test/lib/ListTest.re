@@ -225,4 +225,10 @@ describe("List", ({describe, test}) => {
     expect.int(cmp((x, y) => 0, xs, ys)).toBe(0);
     expect.int(cmp((x, y) => 0, xs, [1, 2, 3, 4])).toBe(-1);
   });
+
+  test("unique", ({expect}) => {
+    let list = [1, 1, 2, 3, 5, 8, 8];
+    expect.fn(() => unique(list)).not.toThrow();
+    expect.list(unique(list)).toEqual([1, 2, 3, 5, 8]);
+  });
 });

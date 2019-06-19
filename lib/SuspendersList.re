@@ -1,4 +1,4 @@
-open List;
+include List;
 
 module A = Suspenders__SuspendersArray;
 
@@ -251,4 +251,17 @@ let rec cmp = (f, xs, ys) => {
       cond;
     };
   };
+};
+
+let unique = xs => {
+  let result = ref([]);
+
+  for (i in 0 to length(xs) - 1) {
+    let item = getExn(xs, i);
+    if (!mem(item, result^)) {
+      result := result^ @ [item];
+    };
+  };
+
+  result^;
 };
