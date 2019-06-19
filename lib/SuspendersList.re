@@ -208,3 +208,6 @@ let rec reduceReverse = (f, acc, xs) =>
   xs |> toArray |> A.reduceReverse(f, acc);
 
 let rec reducei = (f, acc, xs) => xs |> toArray |> A.reducei(f, acc);
+
+let rec reduceReversei = (f, acc, xs) =>
+  xs |> toArray |> A.reduceReversei(f, acc);

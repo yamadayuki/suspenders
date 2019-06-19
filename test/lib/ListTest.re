@@ -189,4 +189,11 @@ describe("List", ({describe, test}) => {
     expect.fn(() => reducei((i, acc, x) => acc + x, 0, list)).not.toThrow();
     expect.int(reducei((i, acc, x) => acc + x, 0, list)).toBe(6);
   });
+
+  test("reduceReversei", ({expect}) => {
+    let list = [1, 2, 3];
+    expect.fn(() => reduceReversei((i, acc, x) => acc + x, 0, list)).not.
+      toThrow();
+    expect.int(reduceReversei((i, acc, x) => acc + x, 0, list)).toBe(6);
+  });
 });

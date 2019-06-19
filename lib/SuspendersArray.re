@@ -280,6 +280,14 @@ let reducei = (f, acc, xs) => {
   result^;
 };
 
+let reduceReversei = (f, acc, xs) => {
+  let result = ref(acc);
+  for (i in length(xs) - 1 downto 0) {
+    result := f(i, result^, getExn(xs, i));
+  };
+  result^;
+};
+
 let rec everyAux = (xs, i, f, len) =>
   if (i == len) {
     true;

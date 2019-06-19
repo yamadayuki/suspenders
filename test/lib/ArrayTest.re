@@ -199,6 +199,13 @@ describe("Array", ({describe, test}) => {
     expect.int(reducei((i, acc, x) => acc + x, 0, arr)).toBe(6);
   });
 
+  test("reduceReversei", ({expect}) => {
+    let arr = [|1, 2, 3|];
+    expect.fn(() => reduceReversei((i, acc, x) => acc + x, 0, arr)).not.
+      toThrow();
+    expect.int(reduceReversei((i, acc, x) => acc + x, 0, arr)).toBe(6);
+  });
+
   test("every", ({expect}) => {
     let arr = [|1, 2, 3|];
     expect.fn(() => every(x => x < 5, arr)).not.toThrow();

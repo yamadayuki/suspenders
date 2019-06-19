@@ -62,6 +62,7 @@ let keepMap: ('a => option('a), array('a)) => array('a);
 let reduce: (('b, 'a) => 'b, 'b, array('a)) => 'b;
 let reduceReverse: (('b, 'a) => 'b, 'b, array('a)) => 'b;
 let reducei: ((int, 'b, 'a) => 'b, 'b, array('a)) => 'b;
+let reduceReversei: ((int, 'b, 'a) => 'b, 'b, array('a)) => 'b;
 let every: ('a => bool, array('a)) => bool;
 let some: ('a => bool, array('a)) => bool;
 let eq: (('a, 'b) => bool, array('a), array('b)) => bool;
