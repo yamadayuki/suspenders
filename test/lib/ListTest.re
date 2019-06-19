@@ -196,4 +196,33 @@ describe("List", ({describe, test}) => {
       toThrow();
     expect.int(reduceReversei((i, acc, x) => acc + x, 0, list)).toBe(6);
   });
+
+  test("every", ({expect}) => {
+    let list = [1, 2, 3];
+    expect.fn(() => every(x => x < 5, list)).not.toThrow();
+    expect.bool(every(x => x < 5, list)).toBe(true);
+    expect.bool(every(x => x > 2, list)).toBe(false);
+  });
+
+  test("some", ({expect}) => {
+    let list = [1, 2, 3];
+    expect.fn(() => some(x => x < 5, list)).not.toThrow();
+    expect.bool(some(x => x < 5, list)).toBe(true);
+    expect.bool(some(x => x > 5, list)).toBe(false);
+  });
+
+  test("eq", ({expect}) => {
+    let xs = [1, 2, 3];
+    let ys = [1, 2, 3];
+    expect.fn(() => eq((==), xs, ys)).not.toThrow();
+    expect.bool(eq((==), xs, ys)).toBe(true);
+  });
+
+  test("cmp", ({expect}) => {
+    let xs = [1, 2, 3];
+    let ys = [1, 2, 3];
+    expect.fn(() => cmp((x, y) => 1, xs, ys)).not.toThrow();
+    expect.int(cmp((x, y) => 0, xs, ys)).toBe(0);
+    expect.int(cmp((x, y) => 0, xs, [1, 2, 3, 4])).toBe(-1);
+  });
 });

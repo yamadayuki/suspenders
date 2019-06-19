@@ -211,3 +211,44 @@ let rec reducei = (f, acc, xs) => xs |> toArray |> A.reducei(f, acc);
 
 let rec reduceReversei = (f, acc, xs) =>
   xs |> toArray |> A.reduceReversei(f, acc);
+
+let rec every = (f, xs) =>
+  switch (xs) {
+  | [] => true
+  | [h, ...t] => f(h) && every(f, t)
+  };
+
+let rec some = (f, xs) =>
+  switch (xs) {
+  | [] => false
+  | [h, ...t] => f(h) || some(f, t)
+  };
+
+let rec eq = (f, xs, ys) => {
+  switch (xs, ys) {
+  | ([], []) => true
+  | ([], _)
+  | (_, []) => false
+  | ([xh, ...xt], [yh, ...yt]) =>
+    if (f(xh, yh)) {
+      eq(f, xt, yt);
+    } else {
+      false;
+    }
+  };
+};
+
+let rec cmp = (f, xs, ys) => {
+  switch (xs, ys) {
+  | ([], []) => 0
+  | ([], _) => (-1)
+  | (_, []) => 1
+  | ([xh, ...xt], [yh, ...yt]) =>
+    let cond = f(xh, yh);
+    if (cond == 0) {
+      cmp(f, xt, yt);
+    } else {
+      cond;
+    };
+  };
+};
