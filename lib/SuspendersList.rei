@@ -51,35 +51,49 @@ let sort_uniq: (('a, 'a) => int, list('a)) => list('a);
 let merge: (('a, 'a) => int, list('a), list('a)) => list('a);
 
 // From SuspendersList
+
+// Getter and setter
 let head: list('a) => option('a);
 let headExn: list('a) => 'a;
 let tail: list('a) => option(list('a));
 let tailExn: list('a) => list('a);
-let fromArray: array('a) => list('a);
-let toArray: list('a) => array('a);
-let add: ('a, list('a)) => list('a);
 let get: (list('a), int) => option('a);
 let getExn: (list('a), int) => 'a;
-let partition: ('a => bool, list('a)) => (list('a), list('a));
-let unzip: list(('a, 'b)) => (list('a), list('b));
-let zip: (list('a), list('b)) => list(('a, 'b));
+let add: ('a, list('a)) => list('a);
+
+// Transformation
+let fromArray: array('a) => list('a);
+let toArray: list('a) => array('a);
+
+// Manipulation
 let take: (int, list('a)) => option(list('a));
 let drop: (int, list('a)) => option(list('a));
 let splitAt: (int, list('a)) => option((list('a), list('a)));
-let zipBy: (('a, 'b) => 'c, list('a), list('b)) => list('c);
+let shuffle: list('a) => list('a);
+let unique: list('a) => list('a);
+let reverse: list('a) => list('a);
+
+// Initialization
 let makeBy: (int, int => 'a) => list('a);
 let make: (int, 'a) => list('a);
-let shuffle: list('a) => list('a);
-let reverse: list('a) => list('a);
-let mapReverse: ('a => 'b, list('a)) => list('b);
+
+// Iterator
 let forEach: ('a => unit, list('a)) => unit;
 let forEachi: ((int, 'a) => unit, list('a)) => unit;
 let reduce: (('a, 'b) => 'a, 'a, list('b)) => 'a;
 let reduceReverse: (('a, 'b) => 'a, 'a, list('b)) => 'a;
 let reducei: ((int, 'a, 'b) => 'a, 'a, list('b)) => 'a;
 let reduceReversei: ((int, 'a, 'b) => 'a, 'a, list('b)) => 'a;
+let mapReverse: ('a => 'b, list('a)) => list('b);
+
+// Scanning
 let every: ('a => bool, list('a)) => bool;
 let some: ('a => bool, list('a)) => bool;
 let eq: (('a, 'b) => bool, list('a), list('b)) => bool;
 let cmp: (('a, 'b) => int, list('a), list('b)) => int;
-let unique: list('a) => list('a);
+
+// Lists of pairs
+let zip: (list('a), list('b)) => list(('a, 'b));
+let zipBy: (('a, 'b) => 'c, list('a), list('b)) => list('c);
+let unzip: list(('a, 'b)) => (list('a), list('b));
+let partition: ('a => bool, list('a)) => (list('a), list('a));

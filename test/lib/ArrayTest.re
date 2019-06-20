@@ -1,7 +1,7 @@
 open TestFramework;
 open Suspenders.Array;
 
-describe("Array", ({describe, test}) => {
+describe("Array", ({describe}) => {
   describe("Getter and setter", ({describe, test}) => {
     describe("getExn", ({test}) => {
       test("doesn't throw", ({expect}) => {

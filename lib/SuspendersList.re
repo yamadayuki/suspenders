@@ -2,6 +2,10 @@ include List;
 
 module A = Suspenders__SuspendersArray;
 
+/**
+ * Getter and setter
+ */
+
 let head =
   fun
   | [] => None
@@ -22,7 +26,38 @@ let tailExn =
   | [] => raise @@ invalid_arg("tailExn")
   | [_, ...xs] => xs;
 
-let fromArray = A.to_list;
+let rec get = (xs, n) =>
+  switch (xs) {
+  | [h, ..._] when n == 0 => Some(h)
+  | [_, ...t] when n > 0 => get(t, n - 1)
+  | _ => None
+  };
+
+let rec getExn = (xs, n) =>
+  switch (xs) {
+  | [h, ..._] when n == 0 => h
+  | [_, ...t] when n > 0 => getExn(t, n - 1)
+  | _ => raise @@ invalid_arg("getExn")
+  };
+
+let add = (x, xs) => [x, ...xs];
+
+/**
+ * Transformation
+ */
+
+let fromArray = xs => {
+  let len = A.length(xs);
+  if (len <= 0) {
+    [];
+  } else {
+    let result = ref([]);
+    for (i in 0 to len - 1) {
+      result := result^ @ [A.getExn(xs, i)];
+    };
+    result^;
+  };
+};
 
 let rec toArrayAux = (xs, i, x) => {
   switch (x) {
@@ -43,53 +78,9 @@ let toArray = xs => {
   };
 };
 
-let add = (x, xs) => [x, ...xs];
-
-let rec get = (xs, n) =>
-  switch (xs) {
-  | [h, ..._] when n == 0 => Some(h)
-  | [_, ...t] when n > 0 => get(t, n - 1)
-  | _ => None
-  };
-
-let rec getExn = (xs, n) =>
-  switch (xs) {
-  | [h, ..._] when n == 0 => h
-  | [_, ...t] when n > 0 => getExn(t, n - 1)
-  | _ => raise @@ invalid_arg("getExn")
-  };
-
-let partition = (f, xs) => {
-  fold_left(
-    ((ys, zs), x) =>
-      if (f(x)) {
-        (ys @ [x], zs);
-      } else {
-        (ys, zs @ [x]);
-      },
-    ([], []),
-    xs,
-  );
-};
-
-let unzip = xs => {
-  fold_left(((ys, zs), (y, z)) => (ys @ [y], zs @ [z]), ([], []), xs);
-};
-
-let rec zipAux = (xs, ys, prec) => {
-  switch (xs, ys) {
-  | ([xh, ...xt], [yh, ...yt]) => zipAux(xt, yt, prec @ [(xh, yh)])
-  | ([], _)
-  | (_, []) => prec
-  };
-};
-
-let zip = (xs, ys) =>
-  switch (xs, ys) {
-  | ([], _)
-  | (_, []) => []
-  | (x, y) => zipAux(x, y, [])
-  };
+/**
+ * Manipuration
+ */
 
 let rec takeAux = (n, cell, prec) =>
   if (n == 0) {
@@ -140,21 +131,30 @@ let splitAt = (n, xs) =>
     };
   };
 
-let rec zipByAux = (f, xs, ys, prec) => {
-  switch (xs, ys) {
-  | ([xh, ...xt], [yh, ...yt]) => zipByAux(f, xt, yt, prec @ [f(xh, yh)])
-  | ([], _)
-  | (_, []) => prec
-  };
+let shuffle = xs => {
+  let arr = toArray(xs);
+  A.shuffleInPlace(arr);
+  fromArray(arr);
 };
 
-let zipBy = (f, xs, ys) => {
-  switch (xs, ys) {
-  | ([], _)
-  | (_, []) => []
-  | (x, y) => zipByAux(f, x, y, [])
+let unique = xs => {
+  let result = ref([]);
+
+  for (i in 0 to length(xs) - 1) {
+    let item = getExn(xs, i);
+    if (!mem(item, result^)) {
+      result := result^ @ [item];
+    };
   };
+
+  result^;
 };
+
+let reverse = rev;
+
+/**
+ * Initialization
+ */
 
 let makeBy = (n, f) =>
   if (n <= 0) {
@@ -183,24 +183,29 @@ let make = (n, v) =>
     cur^;
   };
 
-let shuffle = xs => {
-  let arr = toArray(xs);
-  A.shuffleInPlace(arr);
-  fromArray(arr);
+/**
+ * Iterrator
+ */
+
+let rec forEach = (f, xs) => {
+  switch (xs) {
+  | [] => ()
+  | [h, ...t] =>
+    f(h);
+    forEach(f, t);
+  };
 };
 
-let reverse = rev;
-
-let rec mapReverseAux = (f, acc, xs) =>
+let rec forEachiAux = (f, i, xs) => {
   switch (xs) {
-  | [] => acc
-  | [h, ...t] => mapReverseAux(f, [f(h), ...acc], t)
+  | [] => ()
+  | [h, ...t] =>
+    f(i, h);
+    forEachiAux(f, i + 1, t);
   };
+};
 
-let mapReverse = (f, xs) => mapReverseAux(f, [], xs);
-
-let forEach = iter;
-let forEachi = iteri;
+let forEachi = (f, xs) => forEachiAux(f, 0, xs);
 
 let rec reduce = (f, acc, xs) => xs |> toArray |> A.reduce(f, acc);
 
@@ -211,6 +216,18 @@ let rec reducei = (f, acc, xs) => xs |> toArray |> A.reducei(f, acc);
 
 let rec reduceReversei = (f, acc, xs) =>
   xs |> toArray |> A.reduceReversei(f, acc);
+
+let rec mapReverseAux = (f, acc, xs) =>
+  switch (xs) {
+  | [] => acc
+  | [h, ...t] => mapReverseAux(f, [f(h), ...acc], t)
+  };
+
+let mapReverse = (f, xs) => mapReverseAux(f, [], xs);
+
+/**
+ * Scanning
+ */
 
 let rec every = (f, xs) =>
   switch (xs) {
@@ -253,15 +270,54 @@ let rec cmp = (f, xs, ys) => {
   };
 };
 
-let unique = xs => {
-  let result = ref([]);
+/**
+ * Lists of pairs
+ */
 
-  for (i in 0 to length(xs) - 1) {
-    let item = getExn(xs, i);
-    if (!mem(item, result^)) {
-      result := result^ @ [item];
-    };
+let rec zipAux = (xs, ys, prec) => {
+  switch (xs, ys) {
+  | ([xh, ...xt], [yh, ...yt]) => zipAux(xt, yt, prec @ [(xh, yh)])
+  | ([], _)
+  | (_, []) => prec
+  };
+};
+
+let zip = (xs, ys) =>
+  switch (xs, ys) {
+  | ([], _)
+  | (_, []) => []
+  | (x, y) => zipAux(x, y, [])
   };
 
-  result^;
+let rec zipByAux = (f, xs, ys, prec) => {
+  switch (xs, ys) {
+  | ([xh, ...xt], [yh, ...yt]) => zipByAux(f, xt, yt, prec @ [f(xh, yh)])
+  | ([], _)
+  | (_, []) => prec
+  };
+};
+
+let zipBy = (f, xs, ys) => {
+  switch (xs, ys) {
+  | ([], _)
+  | (_, []) => []
+  | (x, y) => zipByAux(f, x, y, [])
+  };
+};
+
+let unzip = xs => {
+  fold_left(((ys, zs), (y, z)) => (ys @ [y], zs @ [z]), ([], []), xs);
+};
+
+let partition = (f, xs) => {
+  fold_left(
+    ((ys, zs), x) =>
+      if (f(x)) {
+        (ys @ [x], zs);
+      } else {
+        (ys, zs @ [x]);
+      },
+    ([], []),
+    xs,
+  );
 };
