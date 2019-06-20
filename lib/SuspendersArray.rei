@@ -35,38 +35,51 @@ external unsafe_set: (array('a), int, 'a) => unit = "%array_unsafe_set";
 module Floatarray = Array.Floatarray;
 
 // From SuspendersArray
+
+// Getter and setter
 let getExn: (array('a), int) => 'a;
 let setExn: (array('a), int, 'a) => unit;
+let getBy: ('a => bool, array('a)) => option('a);
+let getByi: ('a => bool, array('a)) => option(int);
+
+// Manipulation
 let swapExn: (array('a), int, int) => unit;
 let shuffleInPlace: array('a) => unit;
 let shuffle: array('a) => array('a);
 let reverseInPlace: array('a) => unit;
 let reverse: array('a) => array('a);
+let slice: (int, int, array('a)) => array('a);
+let sliceToEnd: (int, array('a)) => array('a);
+let concatMany: array(array('a)) => array('a);
+let fillInPlace: (int, int, 'a, array('a)) => unit;
+let fill: (int, int, 'a, array('a)) => array('a);
+let keep: ('a => bool, array('a)) => array('a);
+let keepi: ((int, 'a) => bool, array('a)) => array('a);
+let keepMap: ('a => option('a), array('a)) => array('a);
+let unique: array('a) => array('a);
+
+// Initialization
 let makeBy: (int, int => 'a) => array('a);
 let makeByAndShuffle: (int, int => 'a) => array('a);
 let range: (int, int) => array(int);
 let rangeBy: (~step: int, int, int) => array(int);
-let zip: (array('a), array('b)) => array(('a, 'b));
-let zipBy: (('a, 'b) => 'c, array('a), array('b)) => array('c);
-let concatMany: array(array('a)) => array('a);
-let slice: (int, int, array('a)) => array('a);
-let sliceToEnd: (int, array('a)) => array('a);
-let fill: (int, int, 'a, array('a)) => unit;
+
+// Iterator
 let forEach: ('a => unit, array('a)) => unit;
 let forEachi: ((int, 'a) => unit, array('a)) => unit;
-let getBy: ('a => bool, array('a)) => option('a);
-let getIndexBy: ('a => bool, array('a)) => option(int);
-let keep: ('a => bool, array('a)) => array('a);
-let keepi: ((int, 'a) => bool, array('a)) => array('a);
-let keepMap: ('a => option('a), array('a)) => array('a);
 let reduce: (('b, 'a) => 'b, 'b, array('a)) => 'b;
 let reduceReverse: (('b, 'a) => 'b, 'b, array('a)) => 'b;
 let reducei: ((int, 'b, 'a) => 'b, 'b, array('a)) => 'b;
 let reduceReversei: ((int, 'b, 'a) => 'b, 'b, array('a)) => 'b;
+
+// Scanning
 let every: ('a => bool, array('a)) => bool;
 let some: ('a => bool, array('a)) => bool;
 let eq: (('a, 'b) => bool, array('a), array('b)) => bool;
 let cmp: (('a, 'b) => int, array('a), array('b)) => int;
-let partition: ('a => bool, array('a)) => (array('a), array('a));
+
+// Arrays of pairs
+let zip: (array('a), array('b)) => array(('a, 'b));
+let zipBy: (('a, 'b) => 'c, array('a), array('b)) => array('c);
 let unzip: array(('a, 'b)) => (array('a), array('b));
-let unique: array('a) => array('a);
+let partition: ('a => bool, array('a)) => (array('a), array('a));
