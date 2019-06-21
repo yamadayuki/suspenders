@@ -144,6 +144,18 @@ describe("List", ({describe}) => {
         3,
       ]);
     });
+
+    test("slice", ({expect}) => {
+      let list = [1, 2, 3];
+      expect.fn(() => slice(1, 2, list)).not.toThrow();
+      expect.list(slice(1, 2, list)).toEqual([2, 3]);
+    });
+
+    test("sliceToEnd", ({expect}) => {
+      let list = [1, 2, 3];
+      expect.fn(() => sliceToEnd(1, list)).not.toThrow();
+      expect.list(sliceToEnd(1, list)).toEqual([2, 3]);
+    });
   });
 
   describe("Initialization", ({test}) => {

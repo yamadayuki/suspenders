@@ -190,6 +190,66 @@ let rec keepMapAux = (f, acc, xs) =>
 
 let keepMap = (f, xs) => keepMapAux(f, [], xs);
 
+let slice = (offset, len, xs) =>
+  if (len <= 0) {
+    [];
+  } else {
+    let l = length(xs);
+    let ofs =
+      if (offset < 0) {
+        max(l + offset, 0);
+      } else {
+        offset;
+      };
+    let hasLen = l - ofs;
+    let copyLength = min(hasLen, len);
+    if (copyLength <= 0) {
+      [];
+    } else {
+      drop(ofs, xs)
+      |> (
+        fun
+        | Some(x) => x
+        | None =>
+          []
+          |> take(copyLength)
+          |> (
+            fun
+            | Some(x) => x
+            | None => []
+          )
+      );
+    };
+  };
+
+let sliceToEnd = (offset, xs) => {
+  let lenxs = length(xs);
+  let ofs =
+    if (offset < 0) {
+      max(lenxs + offset, 0);
+    } else {
+      offset;
+    };
+  let len = lenxs - ofs;
+  if (len <= 0) {
+    [];
+  } else {
+    drop(ofs, xs)
+    |> (
+      fun
+      | Some(x) => x
+      | None =>
+        []
+        |> take(len)
+        |> (
+          fun
+          | Some(x) => x
+          | None => []
+        )
+    );
+  };
+};
+
 /**
  * Initialization
  */
