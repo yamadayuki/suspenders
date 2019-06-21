@@ -152,6 +152,44 @@ let unique = xs => {
 
 let reverse = rev;
 
+let rec keepAux = (f, acc, xs) =>
+  switch (xs) {
+  | [] => acc
+  | [h, ...t] =>
+    if (f(h)) {
+      keepAux(f, acc @ [h], t);
+    } else {
+      keepAux(f, acc, t);
+    }
+  };
+
+let keep = (f, xs) => keepAux(f, [], xs);
+
+let rec keepiAux = (f, i, acc, xs) =>
+  switch (xs) {
+  | [] => acc
+  | [h, ...t] =>
+    if (f(i, h)) {
+      keepiAux(f, i + 1, acc @ [h], t);
+    } else {
+      keepiAux(f, i + 1, acc, t);
+    }
+  };
+
+let keepi = (f, xs) => keepiAux(f, 0, [], xs);
+
+let rec keepMapAux = (f, acc, xs) =>
+  switch (xs) {
+  | [] => acc
+  | [h, ...t] =>
+    switch (f(h)) {
+    | None => keepMapAux(f, acc, t)
+    | Some(v) => keepMapAux(f, acc @ [v], t)
+    }
+  };
+
+let keepMap = (f, xs) => keepMapAux(f, [], xs);
+
 /**
  * Initialization
  */

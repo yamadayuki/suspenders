@@ -122,6 +122,28 @@ describe("List", ({describe}) => {
       expect.list(list).toEqual([1, 2, 3]);
       expect.list(newList^).toEqual([3, 2, 1]);
     });
+
+    test("keep", ({expect}) => {
+      let list = [1, 2, 3];
+      expect.fn(() => keep(x => x mod 2 == 1, list)).not.toThrow();
+      expect.list(keep(x => x mod 2 == 1, list)).toEqual([1, 3]);
+    });
+
+    test("keepi", ({expect}) => {
+      let list = [1, 2, 3];
+      expect.fn(() => keepi((i, x) => x mod 2 == 1, list)).not.toThrow();
+      expect.list(keepi((i, x) => x mod 2 == 1, list)).toEqual([1, 3]);
+    });
+
+    test("keepMap", ({expect}) => {
+      let list = [1, 2, 3];
+      expect.fn(() => keepMap(x => x mod 2 == 1 ? Some(x) : None, list)).not.
+        toThrow();
+      expect.list(keepMap(x => x mod 2 == 1 ? Some(x) : None, list)).toEqual([
+        1,
+        3,
+      ]);
+    });
   });
 
   describe("Initialization", ({test}) => {

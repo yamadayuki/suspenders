@@ -72,6 +72,9 @@ let splitAt: (int, list('a)) => option((list('a), list('a)));
 let shuffle: list('a) => list('a);
 let unique: list('a) => list('a);
 let reverse: list('a) => list('a);
+let keep: ('a => bool, list('a)) => list('a);
+let keepi: ((int, 'a) => bool, list('a)) => list('a);
+let keepMap: ('a => option('a), list('a)) => list('a);
 
 // Initialization
 let makeBy: (int, int => 'a) => list('a);
