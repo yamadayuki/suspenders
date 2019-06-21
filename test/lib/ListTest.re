@@ -156,6 +156,19 @@ describe("List", ({describe}) => {
       expect.fn(() => sliceToEnd(1, list)).not.toThrow();
       expect.list(sliceToEnd(1, list)).toEqual([2, 3]);
     });
+
+    describe("swapExn", ({test}) => {
+      test("doesn't throw", ({expect}) => {
+        let list = [1, 1, 2, 3];
+        expect.fn(() => swapExn(list, 0, 2)).not.toThrow();
+        expect.list(swapExn(list, 0, 2)).toEqual([2, 1, 1, 3]);
+      });
+
+      test("throws", ({expect}) => {
+        let list = [1, 1, 2, 3];
+        expect.fn(() => swapExn(list, 0, 5)).toThrow();
+      });
+    });
   });
 
   describe("Initialization", ({test}) => {

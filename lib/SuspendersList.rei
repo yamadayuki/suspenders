@@ -77,6 +77,7 @@ let keepi: ((int, 'a) => bool, list('a)) => list('a);
 let keepMap: ('a => option('a), list('a)) => list('a);
 let slice: (int, int, list('a)) => list('a);
 let sliceToEnd: (int, list('a)) => list('a);
+let swapExn: (list('a), int, int) => list('a);
 
 // Initialization
 let makeBy: (int, int => 'a) => list('a);

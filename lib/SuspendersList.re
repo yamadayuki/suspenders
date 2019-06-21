@@ -310,6 +310,42 @@ let rangeBy = (~step, start, finish) => {
   };
 };
 
+let swapExn = (xs, i, j) => {
+  let u = getExn(xs, i);
+  let v = getExn(xs, j);
+
+  let a =
+    take(i - 1, xs)
+    |> (
+      fun
+      | Some(x) => x
+      | None => []
+    );
+
+  let b =
+    take(j - 1, xs)
+    |> (
+      fun
+      | Some(x) => x
+      | None =>
+        []
+        |> drop(i)
+        |> (
+          fun
+          | Some(x) => x
+          | None => []
+        )
+    );
+  let c =
+    drop(j + 1, xs)
+    |> (
+      fun
+      | Some(x) => x
+      | None => []
+    );
+  concat([a, [v], b, [u], c]);
+};
+
 /**
  * Iterrator
  */
