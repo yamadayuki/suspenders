@@ -134,6 +134,16 @@ describe("List", ({describe}) => {
       expect.fn(() => make(3, 3)).not.toThrow();
       expect.list(make(3, 3)).toEqual([3, 3, 3]);
     });
+
+    test("range", ({expect}) => {
+      expect.fn(() => range(3, 5)).not.toThrow();
+      expect.list(range(3, 5)).toEqual([3, 4, 5]);
+    });
+
+    test("rangeBy", ({expect}) => {
+      expect.fn(() => rangeBy(~step=2, 3, 5)).not.toThrow();
+      expect.list(rangeBy(~step=2, 3, 5)).toEqual([3, 5]);
+    });
   });
 
   describe("Iterator", ({test}) => {

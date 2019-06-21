@@ -183,6 +183,35 @@ let make = (n, v) =>
     cur^;
   };
 
+let range = (start, finish) => {
+  let count = finish - start + 1;
+  if (count < 0) {
+    [];
+  } else {
+    let result = ref([]);
+    for (i in 0 to count - 1) {
+      result := result^ @ [start + i];
+    };
+    result^;
+  };
+};
+
+let rangeBy = (~step, start, finish) => {
+  let cut = finish - start;
+  if (cut < 0 || step <= 0) {
+    [];
+  } else {
+    let count = cut / step + 1;
+    let result = ref([]);
+    let curr = ref(start);
+    for (i in 0 to count - 1) {
+      result := result^ @ [curr^];
+      curr := curr^ + step;
+    };
+    result^;
+  };
+};
+
 /**
  * Iterrator
  */

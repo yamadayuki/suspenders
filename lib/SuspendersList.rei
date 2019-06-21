@@ -76,6 +76,8 @@ let reverse: list('a) => list('a);
 // Initialization
 let makeBy: (int, int => 'a) => list('a);
 let make: (int, 'a) => list('a);
+let range: (int, int) => list(int);
+let rangeBy: (~step: int, int, int) => list(int);
 
 // Iterator
 let forEach: ('a => unit, list('a)) => unit;
