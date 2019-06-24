@@ -7,5 +7,6 @@
     SuspendersArray
     SuspendersList
     SuspendersOption
+    SuspendersQueue
     SuspendersStack
     ))
