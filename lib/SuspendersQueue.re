@@ -1,3 +1,5 @@
+module A = Suspenders__SuspendersArray;
+
 type t('a) = {
   mutable length: int,
   mutable first: cell('a),
@@ -108,3 +110,94 @@ let copy = q =>
     getFirst(q),
     t(~length=getLength(q), ~first=None, ~last=None),
   );
+
+let rec mapAux = (result, prev, cell, f) => {
+  switch (cell) {
+  | None =>
+    setLast(prev, result);
+    result;
+  | Some(x) =>
+    let content = f(getContent(x));
+    let res = Some(node(~content, ~next=None));
+    switch (prev) {
+    | None => setFirst(res, result)
+    | Some(p) => setNext(res, p)
+    };
+    mapAux(result, res, getNext(x), f);
+  };
+};
+
+let map = (f, q) =>
+  mapAux(
+    t(~length=getLength(q), ~first=None, ~last=None),
+    None,
+    getFirst(q),
+    f,
+  );
+
+let isEmpty = q => getLength(q) == 0;
+
+let size = getLength;
+
+let rec forEachAux = (f, cell) =>
+  switch (cell) {
+  | None => ()
+  | Some(x) =>
+    f(getContent(x));
+    forEachAux(f, getNext(x));
+  };
+
+let forEach = (f, q) => forEachAux(f, getFirst(q));
+
+let rec reduceAux = (f, acc, cell) =>
+  switch (cell) {
+  | None => acc
+  | Some(x) =>
+    let acc = f(acc, getContent(x));
+    reduceAux(f, acc, getNext(x));
+  };
+
+let reduce = (f, acc, q) => reduceAux(f, acc, getFirst(q));
+
+let transfer = (q1, q2) =>
+  if (getLength(q1) > 0) {
+    switch (getLast(q2)) {
+    | None =>
+      setLength(getLength(q1), q2);
+      setFirst(getFirst(q1), q2);
+      setLast(getLast(q1), q2);
+      clear(q1);
+    | Some(l) =>
+      setLength(getLength(q2) + getLength(q1), q2);
+      setNext(getFirst(q1), l);
+      setLast(getLast(q1), q2);
+      clear(q1);
+    };
+  };
+
+let rec toArrayAux = (i, arr, cell) => {
+  switch (cell) {
+  | None => ()
+  | Some(x) =>
+    A.setExn(arr, i, getContent(x));
+    toArrayAux(i + 1, arr, getNext(x));
+  };
+};
+
+let toArray = x => {
+  switch (getFirst(x)) {
+  | None => [||]
+  | Some(n) =>
+    let v = A.make(getLength(x), getContent(n));
+    toArrayAux(0, v, getFirst(x));
+    v;
+  };
+};
+
+let fromArray = arr => {
+  let q = make();
+  for (i in 0 to A.length(arr) - 1) {
+    add(q, A.getExn(arr, i));
+  };
+  q;
+};
