@@ -197,7 +197,7 @@ let toArray = x => {
 let fromArray = arr => {
   let q = make();
   for (i in 0 to A.length(arr) - 1) {
-    add(q, A.getExn(arr, i));
+    add(A.getExn(arr, i), q);
   };
   q;
 };
