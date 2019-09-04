@@ -1,4 +1,4 @@
-module A = Suspenders__SuspendersArray;
+module A = SuspendersArray;
 
 type t('a) = {
   mutable length: int,

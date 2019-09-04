@@ -1,6 +1,6 @@
 include List;
 
-module A = Suspenders__SuspendersArray;
+module A = SuspendersArray;
 
 /**
  * Getter and setter
