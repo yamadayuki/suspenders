@@ -1,6 +1,6 @@
 {
   "name": "@yamadayuki/suspenders",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Utility for built-in modules inspired by BuckleScript Belt",
   "license": "MIT",
   "esy": {
